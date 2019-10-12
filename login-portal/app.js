@@ -4,9 +4,12 @@ let path = require('path');
 let logger = require('morgan');
 let session = require('express-session');
 
+//okta API
+let okta = require("@okta/okta-sdk-nodejs");
+let ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
 
-let indexRouter = require('./routes/index');
-let usersRouter = require('./routes/users');
+let dashboardRouter = require("./routes/dashboard");         
+let publicRouter = require("./routes/public");
 
 let app = express();
 
@@ -25,8 +28,8 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', publicRouter);
+app.use('/dashboard', dashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
