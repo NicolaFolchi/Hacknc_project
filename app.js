@@ -14,7 +14,7 @@ let okta = require("@okta/okta-sdk-nodejs");
 let ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
 //user authentication with okta
 let oktaClient = new okta.Client({
-  orgUrl: '{https://dev-838812.okta.com}',
+  orgUrl: 'https://dev-838812.okta.com',
   token: "00dtUt2yZHG9W0CZ4sMF1_8M-N87o7wXQhWCLJBpux"
 });
 const oidc = new ExpressOIDC({
