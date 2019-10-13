@@ -3,6 +3,70 @@ let express = require('express');
 let path = require('path');
 let logger = require('morgan');
 let session = require('express-session');
+let app = express();
+
+
+
+// ********************************************CHAT ROOM****************************
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+
+
+// // view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+
+let rooms = {};
+
+app.get('/chatrooms', function(req, res){
+  res.render('chatrooms', {rooms: rooms})
+});
+
+app.post('/room', function(req, res){
+  if(rooms[req.body.room] != null){
+    return res.redirect('/chatrooms')
+  }
+  rooms[req.body.room] = {users: {}};
+  res.redirect(req.body.room);
+  // submit to socket, send message that new room was created
+  io.emit('room-created', req.body.room)
+});
+
+app.get('/:room', function(req, res){
+  // ISSUE WITH COMMENTED CODE = WOULD NOT ALLOW ME TO ACCESS THE CHAT AFTER CREATING IT
+  // if(rooms[req.body.room] == null){
+  //   return res.redirect('/chatrooms')
+  // }
+  res.render('room', {myRoom: req.params.room});
+});
+
+io.on('connection', function(socket) {
+  socket.on('new-user', function(room, name) {
+    socket.join(room)
+    rooms[room].users[socket.id] = name
+    socket.to(room).broadcast.emit('user-connected', name)
+  })
+  socket.on('send-chat-message', function(room, message) {
+    socket.to(room).broadcast.emit('chat-message', { message: message, name: rooms[room].users[socket.id] })
+  })
+  socket.on('disconnect', function() {
+    getUserRooms(socket).forEach(function(room) {
+      socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
+      delete rooms[room].users[socket.id]
+    })
+  })
+})
+
+function getUserRooms(socket) {
+  return Object.entries(rooms).reduce((names, [name, room]) => {
+    if (room.users[socket.id] != null) names.push(name)
+    return names
+  }, [])
+}
+
+// *********************************************************************************
 
 // ========= routes ==============
 let dashboardRouter = require("./routes/dashboard");
@@ -17,7 +81,7 @@ let oktaClient = new okta.Client({
   orgUrl: 'https://dev-838812.okta.com',
   token: "00dtUt2yZHG9W0CZ4sMF1_8M-N87o7wXQhWCLJBpux"
 });
-const oidc = new ExpressOIDC({
+let oidc = new ExpressOIDC({
   issuer: "https://dev-838812.okta.com/oauth2/default",
   client_id: "0oa1kkvwcp9TYd7nu357",
   client_secret: "cjrFAlzTnWNrfQ73ANS4T7znss3nVzP6ulTPF1jH",
@@ -33,12 +97,6 @@ const oidc = new ExpressOIDC({
     }
   }
 });
-
-let app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());

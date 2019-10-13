@@ -1,0 +1,58 @@
+extends layout
+
+block variables
+  - let title = "Chat"
+
+block scripts
+  script. 
+    const roomName = "#{roomName}"
+    
+  script(defer src='http://localhost:3000/socket.io/socket.io.js')
+  script(defer src='chat_script.js')
+  //- script(type='text/javascript').
+  //-   //- - let name = user.profile.firstName;
+  //-   appendMessage('You joined')
+  //-   socket.emit('new-user', user.profile.firstName)
+
+  //-   // socket.on('room-created', room => {
+  //-   //   let roomEle = document.createElement('div');
+  //-   //   roomele.innerText = room;
+  //-   //   let roomLink = document.createElement('a');
+  //-   //   roomLink.href = `/${room}`
+  //-   // })
+
+  //-   socket.on('chat-message', function(data) {
+  //-     appendMessage(`${data.user.profile.firstName}: ${data.message}`)
+  //-   })
+
+  //-   socket.on('user-connected', user.profile.firstName => {
+  //-     appendMessage(`${user.profile.firstName} connected`)
+  //-   })
+
+  //-   socket.on('user-disconnected', function(user.profile.firstName) {
+  //-    appendMessage(`${user.profile.firstName} disconnected`)
+  //-   })
+
+  //-   messageForm.addEventListener('submit', e => {
+  //-    e.preventDefault()
+  //-    let message = messageInput.value
+  //-    appendMessage(`You: ${message}`)
+  //-    socket.emit('send-chat-message', message)
+  //-    messageInput.value = ''
+  //-   })
+
+  //-   function appendMessage(message) {
+  //-    let messageElement = document.createElement('div')
+  //-    messageElement.innerText = message
+  //-    messageContainer.append(messageElement)
+  //-   }
+
+block content
+  h2.text-center Chat
+
+  
+  div(id="chat-container")
+      form(id="message-container")
+      input(id="message-input" type="text")
+      button(id="send-button" type="submit").
+        Send

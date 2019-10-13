@@ -1,0 +1,64 @@
+extends layout
+
+
+block variables
+  - let title = "ChatRooms"
+
+block scripts
+  
+  script(defer src='http://localhost:3000/socket.io/socket.io.js')
+  script(defer src='chat_script.js')
+  
+  //- script(type='text/javascript').
+    //- - let name = user.profile.firstName;
+    //- appendMessage('You joined')
+    //- socket.emit('new-user', user.profile.firstName)
+
+    //- // socket.on('room-created', room => {
+    //- //   let roomEle = document.createElement('div');
+    //- //   roomele.innerText = room;
+    //- //   let roomLink = document.createElement('a');
+    //- //   roomLink.href = `/${room}`
+    //- // })
+
+    //- socket.on('chat-message', data => {
+    //-   appendMessage(`${data.user.profile.firstName}: ${data.message}`)
+    //- })
+
+    //- socket.on('user-connected', function(user.profile.firstName) {
+    //-   appendMessage(`${user.profile.firstName} connected`)
+    //- })
+
+    //- socket.on('user-disconnected', user.profile.firstName => {
+    //-   appendMessage(`${user.profile.firstName} disconnected`)
+    //- })
+
+    //- messageForm.addEventListener('submit', e => {
+    //-   e.preventDefault()
+    //-   let message = messageInput.value
+    //-   appendMessage(`You: ${message}`)
+    //-   socket.emit('send-chat-message', message)
+    //-   messageInput.value = ''
+    //- })
+
+    //- function appendMessage(message) {
+    //-   let messageElement = document.createElement('div')
+    //-   messageElement.innerText = message
+    //-   messageContainer.append(messageElement)
+    //- }
+
+block content
+  h2.text-center ChatRooms
+
+  #room-container
+    - Object.keys(rooms).forEach(room => {
+      div. 
+        #{room} #[a(href="/" + room) Join]
+    - })
+
+  form(action="/room" method="POST")
+    input(name="room" type="text" required)
+    button(type="submit") New Room
+
+  
+       

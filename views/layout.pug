@@ -6,6 +6,7 @@ html(lang="en")
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+    //- <link rel="stylesheet" href="node_modules/bulma/css/bulma.css" />
     link(rel="stylesheet", href="/stylesheets/style.css")
     title Chattedit: #{title}
   body
@@ -18,10 +19,12 @@ html(lang="en")
         if user == undefined
           a.p-2.text-dark(href="/users/login") Log In / Register
         else
+          a.p-2.text-dark(href="/chatrooms") ChatRooms
           a.p-2.text-dark(href="/dashboard") Dashboard
           a.p-2.text-dark(href="/users/logout") Logout
     .container
       block content
+    block scripts
 
     footer.
       Built with #[a(href="https://expressjs.com/") Express.js], login powered by #[a(href="https://developer.okta.com/") Okta].
